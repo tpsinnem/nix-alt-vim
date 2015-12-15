@@ -16,17 +16,17 @@ rec {
 
 
   pathogenize =
-    { stdenv, fetchgit, callPackage, buildEnv, baseVimrc ? "", plugins, vim }:
+    { stdenv, fetchgit, callPackage, linkFarm, baseVimrc ? "", plugins, vim }:
     
       let
         pgen  = pathogen { inherit stdenv fetchgit; };
 
-        plugs = buildEnv {  name  = "vim-pathogen-plugins";
-                            paths = plugins; };
+        plugs = linkFarm "vim-pathogen-plugins" plugins;
 
-        rc    = baseVimrc + ''
+        rc    = baseVimrc +
+                ''
                   let &rtp.=(empty(&rtp)?"":',')."${pgen}"
-                  execute pathogen#infect('${plugs}')
+                  execute pathogen#infect('${plugs}/{}')
                 '';
       in
         (callPackage vim {}) { baseVimrc = rc; };
