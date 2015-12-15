@@ -1,0 +1,3 @@
+{ writeText }:
+
+writeText "emptyVimrc" ""
