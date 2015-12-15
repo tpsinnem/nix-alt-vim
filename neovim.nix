@@ -86,7 +86,7 @@ let
 
     postInstall =
       ''
-        echo $baseVimrc > $out/share/nvim/vimrc
+        echo "$baseVimrc" > $out/share/nvim/sysinit.vim
       ''
       + stdenv.lib.optionalString stdenv.isDarwin ''
           echo patching $out/bin/nvim
