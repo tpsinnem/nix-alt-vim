@@ -3,7 +3,7 @@
 , pkgconfig, unibilium, makeWrapper
 , withJemalloc ? true, jemalloc }:
 
-{ baseVimrc }:
+{ baseVimrc ? "" }:
 
 with stdenv.lib;
 
@@ -40,6 +40,8 @@ let
   };
 
   neovim = stdenv.mkDerivation {
+
+    inherit baseVimrc;
 
     name = "neovim-${version}";
 
@@ -84,7 +86,7 @@ let
 
     postInstall =
       ''
-        ln -s ${baseVimrc} $out/share/nvim/vimrc
+        echo $baseVimrc > $out/share/nvim/vimrc
       ''
       + stdenv.lib.optionalString stdenv.isDarwin ''
           echo patching $out/bin/nvim

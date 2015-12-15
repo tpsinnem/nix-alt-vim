@@ -16,8 +16,7 @@ rec {
 
 
   pathogenize =
-    { stdenv, fetchgit, callPackage, runCommand, writeText, buildEnv
-    , baseVimrc, plugins, vim }:
+    { stdenv, fetchgit, callPackage, buildEnv, baseVimrc ? "", plugins, vim }:
     
       let
         pgen  = pathogen { inherit stdenv fetchgit; };
@@ -25,13 +24,9 @@ rec {
         plugs = buildEnv {  name  = "vim-pathogen-plugins";
                             paths = plugins; };
 
-        pgenLines = writeText "vimrc-pathogen-lines" ''
-                      let &rtp.=(empty(&rtp)?"":',')."${pgen}"
-                      execute pathogen#infect('${plugs}')
-                    '';
-          
-        rc    = runCommand "pathogen-vimrc" {} ''
-                  cat ${baseVimrc} ${pgenLines} > $out
+        rc    = baseVimrc + ''
+                  let &rtp.=(empty(&rtp)?"":',')."${pgen}"
+                  execute pathogen#infect('${plugs}')
                 '';
       in
         (callPackage vim {}) { baseVimrc = rc; };
