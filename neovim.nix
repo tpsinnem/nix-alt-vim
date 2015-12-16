@@ -1,7 +1,9 @@
 { stdenv, fetchFromGitHub, cmake, gettext, glib, libmsgpack, libtermkey
 , libtool, libuv, lpeg, lua, luajit, luaMessagePack, luabitop, ncurses, perl
 , pkgconfig, unibilium, makeWrapper
-, withJemalloc ? true, jemalloc }:
+, withJemalloc ? true, jemalloc
+
+, vimAlias ? false }:
 
 { baseVimrc ? "" }:
 
@@ -87,6 +89,9 @@ let
     postInstall =
       ''
         echo "$baseVimrc" > $out/share/nvim/sysinit.vim
+      ''
+      + stdenv.lib.optionalString vimAlias ''
+          ln -s $out/bin/nvim $out/bin/vim
       ''
       + stdenv.lib.optionalString stdenv.isDarwin ''
           echo patching $out/bin/nvim
