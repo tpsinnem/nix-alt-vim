@@ -2,12 +2,12 @@ let
   pkgs        = import <nixpkgs> {};
   luacallpkg  = pkgs.lib.callPackageWith (pkgs // pkgs.lua52Packages);
 
-  neovim      = luacallpkg ./neovim.nix { vimAlias = true; };
+  neovim      = luacallpkg vim/neovim.nix { vimAlias = true; };
   
-  pathogenize = (import ./vim-pathogen.nix).pathogenize;
+  pathogenize = (import pathogen/default.nix).pathogenize;
 
-  idrisVim    = pkgs.callPackage ./idris-vim.nix {};
-  vim2hs      = pkgs.callPackage ./vim2hs.nix {};
+  idrisVim    = pkgs.callPackage plugins/pathogen/idris-vim.nix {};
+  vim2hs      = pkgs.callPackage plugins/pathogen/vim2hs.nix {};
 
 
 in
